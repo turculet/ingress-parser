@@ -1,5 +1,6 @@
 package com.turculet.parser.config;
 
+import com.turculet.parser.infra.ParserServiceLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -51,7 +52,7 @@ public class ApplicationStreamConfig {
                     throw new RuntimeException("Mimic unexpected error");
                 }
 
-                return value;
+                return ParserServiceLoader.defaultProvider().getParser().parse(value);
             } catch (Exception e) {
                 return null;
             }
