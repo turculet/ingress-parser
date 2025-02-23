@@ -1,4 +1,4 @@
-package com.turculet.ingress_parser.config;
+package com.turculet.parser.config;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.*;
@@ -16,9 +16,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -66,7 +65,7 @@ class StreamIntegrationTest {
     }
 
     @Test
-    void testKafkaStreamProcessing() throws Exception {
+    void testOkProcessing() throws Exception {
         // Send a dummy message to input topic
         String message = "hello kafka";
         ProducerRecord<String, String> record = new ProducerRecord<>(INPUT_TOPIC, message);
@@ -84,6 +83,36 @@ class StreamIntegrationTest {
         });
 
         System.out.println("Records size: " + consumerRecords.count());
+    }
+
+    @Test
+    void shouldSkipError() {
+        String message = "error,normal";
+
+        Arrays.stream(message.split(",")).forEach(value -> {
+            ProducerRecord<String, String> record = new ProducerRecord<>(INPUT_TOPIC, value);
+            RecordMetadata metadata = null;
+            try {
+                metadata = producer.send(record).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            assertThat(metadata).isNotNull();
+
+        });
+
+        // Poll and validate the output message
+        ConsumerRecords<String, String> consumerRecords = KafkaTestUtils.getRecords(consumer, Duration.ofSeconds(2));
+        assertThat(consumerRecords.count()).isGreaterThan(0);
+
+        Iterable<ConsumerRecord<String, String>> topicRecords = consumerRecords.records(OUTPUT_TOPIC);
+
+        topicRecords.forEach(record1 -> {
+            System.out.println("Value: " + record1.value());
+        });
+
+        assertThat(consumerRecords.count()).isEqualTo(1);
+
     }
 
 }

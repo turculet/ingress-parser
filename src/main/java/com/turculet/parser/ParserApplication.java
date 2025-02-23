@@ -1,13 +1,13 @@
-package com.turculet.ingress_parser;
+package com.turculet.parser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IngressParserApplication {
+public class ParserApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IngressParserApplication.class, args);
+		SpringApplication.run(ParserApplication.class, args);
 	}
 
 }
