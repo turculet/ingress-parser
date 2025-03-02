@@ -1,4 +1,5 @@
 rootProject.name = 'parser'
 include 'parser-api-spi'
 include 'date-parser'
+include 'webtalk-page-parser'
 

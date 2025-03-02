@@ -39,6 +39,7 @@ dependencies {
 
 	implementation project(':parser-api-spi')
 	implementation project(':date-parser')
+	implementation project(':webtalk-page-parser')
 }
 
 tasks.named('bootBuildImage') {

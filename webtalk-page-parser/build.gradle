@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.turculet'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':parser-api-spi')
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation 'org.jsoup:jsoup:1.18.3'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
